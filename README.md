@@ -258,7 +258,18 @@ This notebook connects to the database and displays query results for verificati
 - Add monitoring and alerting
 
 --- 
+## Noted:
 ***For Assignemnt Propose***, You can access the project enviornment variable in :
 ```bash
 .env
 ```
+
+***You can checkout Airflow Service: ***
+
+[Link: AirFlow Service](http://localhost:8080/login/)
+```text
+Username: airflow
+Password: airflow
+```
+
+
