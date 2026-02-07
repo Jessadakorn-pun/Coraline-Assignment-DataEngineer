@@ -3,7 +3,7 @@
 This project demonstrates an end-to-end **ELT (Extract, Load, Transform) data pipeline** using  
 **Apache Airflow, PostgreSQL, dbt, and Docker**.
 
-The pipeline ingests CSV data, loads it into a data warehouse, and transforms it into analytics-ready tables using dbt — following modern data engineering best practices.
+The pipeline ingests CSV data, loads it into a data warehouse, and transforms it into analytics-ready tables using dbt
 
 ---
 
@@ -87,7 +87,7 @@ The system follows a **modern ELT architecture**:
 - All components run in **Docker containers**
 - Ensures consistency and reproducibility
 
-📐 **High-level Architecture:**
+**High-level Architecture:**
 <p align="center">
   <img src="./design/architecture.drawio.png" width="1000
   ">
