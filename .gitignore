@@ -1,0 +1,6 @@
+
+./dbt/custom_model/target/
+./dbt/custom_model/dbt_packages/
+./dbt/custom_model/logs/
+./test/venv/
+test_start.sh

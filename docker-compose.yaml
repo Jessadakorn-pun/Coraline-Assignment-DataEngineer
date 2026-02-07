@@ -1,0 +1,92 @@
+services:
+  data_warehouse:
+    image: postgres:15-alpine
+    container_name: data_warehouse
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DATA_WAREHOUSE_POSTGRES_DB}
+      POSTGRES_USER: ${DATA_WAREHOUSE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DATA_WAREHOUSE_POSTGRES_PASSWORD}
+    networks:
+      - elt_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - data_warehouse_data:/var/lib/postgresql/data
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - elt_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow-init:
+    image: apache/airflow:2.8.1
+    container_name: airflow-init
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - elt_network
+    env_file:
+      - .env
+    command: >
+      bash -c "
+      airflow db migrate && airflow users create --username airflow --password airflow --firstname Pun --lastname Pun --role Admin --email admin@example.com"
+
+  airflow-webserver:
+    image: apache/airflow:2.8.1
+    container_name: airflow-webserver
+    depends_on:
+      - airflow-init
+    networks:
+      - elt_network
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    env_file:
+      - .env
+    command: airflow webserver
+
+  airflow-scheduler:
+    image: apache/airflow:2.8.1
+    container_name: airflow-scheduler
+    depends_on:
+      - airflow-init
+    networks:
+      - elt_network
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    env_file:
+      - .env
+    command: airflow scheduler
+  
+
+networks:
+  elt_network:
+    driver: bridge
+
+volumes:
+  data_warehouse_data:
+  postgres_data:
+

@@ -1,0 +1,12 @@
+custom_model:
+  outputs:
+    dev:
+      type: "{{ env_var('DBT_DB_TYPE', 'postgres') }}"
+      host: "{{ env_var('DATA_WAREHOUSE_POSTGRES_HOST') }}"
+      port: "{{ env_var('DATA_WAREHOUSE_POSTGRES_PORT', 5432) | int }}"
+      dbname: "{{ env_var('DATA_WAREHOUSE_POSTGRES_DB') }}"
+      user: "{{ env_var('DATA_WAREHOUSE_POSTGRES_USER') }}"
+      pass: "{{ env_var('DATA_WAREHOUSE_POSTGRES_PASSWORD') }}"
+      schema: "{{ env_var('DBT_DB_SCHEMA', 'public') }}"
+      threads: "{{ env_var('DBT_THREAD', 4) | int }}"
+  target: dev

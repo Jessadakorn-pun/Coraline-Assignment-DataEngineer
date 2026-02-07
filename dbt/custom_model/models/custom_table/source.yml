@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: challenge
+    description: "Raw data from staging area in data wareshouse, ingested from the source csv files."
+    database: challenge
+    schema: public
+    tables:
+      - name: food_sales

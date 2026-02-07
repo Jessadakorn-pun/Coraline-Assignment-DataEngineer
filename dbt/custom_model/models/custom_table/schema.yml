@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: food_sales
+    description: "Raw food sales transaction data loaded from FoodSales.csv"
+    columns:
+      - name: id
+        description: "Transaction ID"
+        tests:
+          - not_null
+
+      - name: date
+        description: "Transaction date"
+        tests:
+          - not_null
+
+      - name: region
+        description: "Sales region (East, West, etc.)"
+        tests:
+          - not_null
+
+      - name: city
+        description: "City where the sale occurred"
+        tests:
+          - not_null
+
+      - name: category
+        description: "Product category"
+        tests:
+          - not_null
+
+      - name: product
+        description: "Product name"
+        tests:
+          - not_null
+
+      - name: qty
+        description: "Quantity sold"
+        tests:
+          - not_null
+
+      - name: unitprice
+        description: "Price per unit"
+        tests:
+          - not_null
+
+      - name: totalprice
+        description: "Total sales price (qty * unitprice)"
+        tests:
+          - not_null
+
+  - name: cate_reg
+    description: "Aggregated sales by product category and region"
+    columns:
+      - name: category
+        description: "Product category"
+        tests:
+          - not_null
+          - unique
+
+      - name: east
+        description: "Total sales amount for East region"
+
+      - name: west
+        description: "Total sales amount for West region"
+
+      - name: grand_total
+        description: "Total sales amount across all regions"
