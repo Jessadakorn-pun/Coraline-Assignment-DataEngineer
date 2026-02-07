@@ -1,3 +1,5 @@
+name: coraline-assignment
+
 services:
   data_warehouse:
     image: postgres:15-alpine
@@ -84,6 +86,7 @@ services:
 
 networks:
   elt_network:
+    name: coraline-assignment_elt_network
     driver: bridge
 
 volumes:
