@@ -1,3 +1,21 @@
+"""
+Airflow DAG for ELT pipeline using PythonOperator and DockerOperator.
+
+Pipeline Overview:
+    1. ELT Load (PythonOperator)
+        - Load CSV data from mounted volume
+        - Insert/Upsert raw data into PostgreSQL data warehouse
+
+    2. dbt Transformation (DockerOperator)
+        - Run dbt models inside a containerized environment
+        - Transform raw data into analytics-ready tables
+
+This DAG supports:
+    - Manual trigger (initial bootstrap)
+    - Scheduled daily execution
+    - Idempotent re-runs
+"""
+
 import os
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
@@ -20,7 +38,7 @@ with DAG(
     )
     
     custom_model_task = DockerOperator(
-        task_id= "dbt_run",
+        task_id= "dbt_run", 
         image= "custom-model-dbt:latest",
         command= "run --project-dir /opt/dbt --profiles-dir /root/.dbt",
         auto_remove= True,

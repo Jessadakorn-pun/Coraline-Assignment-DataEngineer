@@ -1,3 +1,15 @@
+"""
+ELT module for loading FoodSales CSV data into PostgreSQL data warehouse.
+
+This module performs the following steps:
+1. Validate CSV file existence and content
+2. Create destination table if it does not exist
+3. Load CSV data into PostgreSQL using upsert logic
+4. Ensure transactional safety with commit/rollback
+
+Designed for use in Airflow PythonOperator or standalone execution.
+"""
+
 import csv
 from datetime import datetime
 from .db import get_connection, check_table_exists
@@ -39,7 +51,25 @@ ON CONFLICT (id) DO UPDATE SET
     updated_at = CURRENT_TIMESTAMP;
 """
 
+
 def main():
+    
+    """
+    Execute ELT process to load FoodSales CSV data into PostgreSQL.
+
+    Workflow:
+        - Establish database connection
+        - Create target table if not exists
+        - Parse CSV file and transform data types
+        - Insert or update records using upsert logic
+        - Commit transaction on success
+        - Rollback transaction on failure
+
+    Raises:
+        RuntimeError:
+            If CSV file is empty or any database operation fails.
+    """
+    
     print(f"Starting ELT load from {CSV_PATH}")
 
     conn = get_connection()
